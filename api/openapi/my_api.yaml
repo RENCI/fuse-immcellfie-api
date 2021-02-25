@@ -29,7 +29,7 @@ paths:
                 type: string
                 example: "hello dave!"
 
-  /serve_file:
+  /api/serve_file:
     get:
       summary: Returns file from the data dir
       description: >-

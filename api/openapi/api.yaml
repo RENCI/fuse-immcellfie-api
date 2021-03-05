@@ -641,74 +641,74 @@ paths:
             text/plain:
               schema:
                 type: string
-    post:
-      summary: "Given a patient ID list and a plugin id, return the analysis for all patients in the list"
-      operationId: api.get_analysis
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/analysis"
-              example:
-                [{ piid: "pdspi-analysis-example", patientId: "smart-7321938" }]
-      responses:
-        "200":
-          description: analysis matching query
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/analysis"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Message"
-                    example:
-                      - timestamp: "2019-09-20T00:00:01Z"
-                        event: "Missing patient variable[LOINC:30525-0]"
-                        source: pdspi-mapper-example
-                        level: 3
-                        action: >-
-                          Called plugin with missing values
-                          [pdspi-analysis-example]
-                      - timestamp: "2019-09-20T00:00:02Z"
-                        event: "Missing patient variable[LOINC:30525-0]"
-                        source: pdspi-analysis-example
-                        level: 3
-                        action: "Set LOINC:30525-0='85' for most conservative analysis"
-                  analysis:
-                    $ref: "#/components/schemas/analysis"
-        "500":
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Message"
-                    example:
-                      - timestamp: "2019-09-20T00:00:01Z"
-                        event: >-
-                          analysis plugin results did not pass JSON
-                          validator:[{"valuE": "5"}]
-                        source: pdspi-analysis-example
-                        level: 3
-                        action: "Correction attempted: 'valuE' to 'value'."
-                  analysis:
-                    $ref: "#/components/schemas/analysis"
+    # post:
+    #   summary: "Given a patient ID list and a plugin id, return the analysis for all patients in the list"
+    #   operationId: api.get_analysis
+    #   requestBody:
+    #     content:
+    #       application/json:
+    #         schema:
+    #           type: array
+    #           items:
+    #             $ref: "#/components/schemas/analysis"
+    #           example:
+    #             [{ piid: "pdspi-analysis-example", patientId: "smart-7321938" }]
+    #   responses:
+    #     "200":
+    #       description: analysis matching query
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: array
+    #             items:
+    #               $ref: "#/components/schemas/analysis"
+    #     "400":
+    #       description: Bad Request
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               message:
+    #                 type: array
+    #                 items:
+    #                   $ref: "#/components/schemas/Message"
+    #                 example:
+    #                   - timestamp: "2019-09-20T00:00:01Z"
+    #                     event: "Missing patient variable[LOINC:30525-0]"
+    #                     source: pdspi-mapper-example
+    #                     level: 3
+    #                     action: >-
+    #                       Called plugin with missing values
+    #                       [pdspi-analysis-example]
+    #                   - timestamp: "2019-09-20T00:00:02Z"
+    #                     event: "Missing patient variable[LOINC:30525-0]"
+    #                     source: pdspi-analysis-example
+    #                     level: 3
+    #                     action: "Set LOINC:30525-0='85' for most conservative analysis"
+    #               analysis:
+    #                 $ref: "#/components/schemas/analysis"
+    #     "500":
+    #       description: Internal Server Error
+    #       content:
+    #         application/json:
+    #           schema:
+    #             type: object
+    #             properties:
+    #               message:
+    #                 type: array
+    #                 items:
+    #                   $ref: "#/components/schemas/Message"
+    #                 example:
+    #                   - timestamp: "2019-09-20T00:00:01Z"
+    #                     event: >-
+    #                       analysis plugin results did not pass JSON
+    #                       validator:[{"valuE": "5"}]
+    #                     source: pdspi-analysis-example
+    #                     level: 3
+    #                     action: "Correction attempted: 'valuE' to 'value'."
+    #               analysis:
+    #                 $ref: "#/components/schemas/analysis"
 components:
   schemas:
     Message:

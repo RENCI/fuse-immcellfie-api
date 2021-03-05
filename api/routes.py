@@ -3,6 +3,8 @@ import os
 from flask import Response, jsonify, request
 from flask_cors import CORS, cross_origin
 
+from api.utils.file import get_file, root_dir
+
 
 def hello_world():
     return "hello world"
@@ -24,12 +26,3 @@ def serve_file():
             )
     else:
         return "Please provide the filename query param ", 404
-
-
-def root_dir():  # pragma: no cover
-    return os.path.abspath(os.path.dirname(__file__))
-
-
-def get_file(filename):  # pragma: no cover
-    src = os.path.join("/usr/src/app/data/", filename)
-    return open(src).read()

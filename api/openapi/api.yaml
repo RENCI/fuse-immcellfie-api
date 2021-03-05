@@ -29,26 +29,11 @@ paths:
                 type: string
                 example: "hello dave!"
 
-  /serve_file:
-    get:
-      summary: Returns file from the data dir
-      description: >-
-        Returns file from the data dir
-      operationId: api.routes.serve_file
-      responses:
-        200:
-          description: greeting response
-          content:
-            text/plain:
-              schema:
-                type: string
-                example: "hello dave!"
-
   /patientVariables:
     post:
-      summary: Return patient variables required by a guidance plugin
+      summary: Return patient variables required by a analysis plugin
       description: >-
-        Given a guidance plugin id (piid), mapper, FHIR plugin and patient id list
+        Given a analysis plugin id (piid), mapper, FHIR plugin and patient id list
         (patientIds), return all the relevant mapped patient variable values for each patient
         in the patient id list. If patientVariables values in settingsRequested
         are defined, they will override values from the mapper. If no
@@ -57,7 +42,7 @@ paths:
         is set, 5xx message will warn that defaults were selected arbitrarily
         and the client should react appropriately. PatientVariables define 
         legalValues to enable verification of the returned value. Patient variable values are also returned by the
-        '/guidance' endpoint.
+        '/analysis' endpoint.
       operationId: api.get_patient_variables
       requestBody:
         content:
@@ -68,9 +53,9 @@ paths:
                 fhirPiid:
                   type: string
                   example: "pdspi-fhir-example"
-                guidancePiid:
+                analysisPiid:
                   type: string
-                  example: "pdspi-guidance-example"
+                  example: "pdspi-analysis-example"
                 mapperPiid:
                   type: string
                   example: "pdspi-mapper-example"
@@ -160,8 +145,8 @@ paths:
         - name: piid
           description: >-
             If present, include only information about the indicated plugin. if
-            not present, return all guidance piids and their info.
-          example: pdspi-guidance-example
+            not present, return all analysis piids and their info.
+          example: pdspi-analysis-example
           in: query
           required: false
           schema:
@@ -210,12 +195,12 @@ paths:
                           legalValues:
                             type: number
                             minimum: "0"
-                  - piid: pdspi-guidance-example
-                    title: Example plugin for Amikacin dosing guidance
+                  - piid: pdspi-analysis-example
+                    title: Example plugin for Amikacin dosing analysis
                     pluginDependencies:
                       - string
                     pluginType: g
-                    pluginTypeTitle: guidance
+                    pluginTypeTitle: analysis
                     settingsDefaults:
                       pluginSelectors:
                         - id: dosing.rxCUI
@@ -231,7 +216,7 @@ paths:
                             value: "rxCUI:1596450"
                             title: Amikacin
                       modelParameters:
-                        - id: "pdspi-guidance-example:1"
+                        - id: "pdspi-analysis-example:1"
                           title: Extended interval nomogram
                           parameterDescription: This calculator uses one of four extended-interval nomograms. Please choose one nomogram.
                           legalValues:
@@ -301,7 +286,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/Config"
                     example:
-                      - title: Aminoglycoside dosing guidance
+                      - title: Aminoglycoside dosing analysis
                         piid: pdspi-aminoglycoside-nomogram
                         pluginType: g
                         pluginSelectors:
@@ -311,7 +296,7 @@ paths:
                               value: "rxCUI:1596450"
                               title: Gentamicin
                         pluginParameterDefaults:
-                          - id: "pdspi-guidance-example:1"
+                          - id: "pdspi-analysis-example:1"
                             title: Extended interval nomogram
                             parameterDescription: >-
                               This calculator uses one of four extended-interval
@@ -508,7 +493,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/Config"
                     example:
-                      - title: Aminoglycoside dosing guidance
+                      - title: Aminoglycoside dosing analysis
                         piid: pdspi-aminoglycoside-nomogram
                         pluginType: g
                         pluginSelectors:
@@ -518,7 +503,7 @@ paths:
                               value: "rxCUI:1596450"
                               title: Gentamicin
                         pluginParameterDefaults:
-                          - id: "pdspi-guidance-example:1"
+                          - id: "pdspi-analysis-example:1"
                             title: Extended interval nomogram
                             parameterDescription: >-
                               This calculator uses one of four extended-interval
@@ -559,7 +544,7 @@ paths:
         selectors and their legal values. For example, two selectors might
         be 1. drug type and 2. indication. If the client selects values for
         the selector that matches all piid selector values, then this plugin
-        can provide guidance.
+        can provide analysis.
       operationId: api.get_selectors
       responses:
         "200":
@@ -633,38 +618,50 @@ paths:
                     example:
                       - timestamp: "2019-09-20T00:00:01Z"
                         event: >-
-                          Guidance plugin[pdspi-guidance-example] not responding
+                          analysis plugin[pdspi-analysis-example] not responding
                           after multiple attempts
                         source: pds
                         level: 2
-                        action: "Disabled plugin[pdspi-guidance-example]"
+                        action: "Disabled plugin[pdspi-analysis-example]"
                   selectors:
                     type: array
                     items:
                       $ref: "#/components/schemas/PluginSelector"
                     example: []
-  /guidance:
+  /analysis:
+    get:
+      summary: Returns file from the data dir
+      description: >-
+        Returns file from the data dir
+      operationId: api.routes.serve_file
+      responses:
+        200:
+          description: greeting response
+          content:
+            text/plain:
+              schema:
+                type: string
     post:
-      summary: "Given a patient ID list and a plugin id, return the guidance for all patients in the list"
-      operationId: api.get_guidance
+      summary: "Given a patient ID list and a plugin id, return the analysis for all patients in the list"
+      operationId: api.get_analysis
       requestBody:
         content:
           application/json:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/Guidance"
+                $ref: "#/components/schemas/analysis"
               example:
-                [{ piid: "pdspi-guidance-example", patientId: "smart-7321938" }]
+                [{ piid: "pdspi-analysis-example", patientId: "smart-7321938" }]
       responses:
         "200":
-          description: Guidance matching query
+          description: analysis matching query
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Guidance"
+                  $ref: "#/components/schemas/analysis"
         "400":
           description: Bad Request
           content:
@@ -683,14 +680,14 @@ paths:
                         level: 3
                         action: >-
                           Called plugin with missing values
-                          [pdspi-guidance-example]
+                          [pdspi-analysis-example]
                       - timestamp: "2019-09-20T00:00:02Z"
                         event: "Missing patient variable[LOINC:30525-0]"
-                        source: pdspi-guidance-example
+                        source: pdspi-analysis-example
                         level: 3
-                        action: "Set LOINC:30525-0='85' for most conservative guidance"
-                  guidance:
-                    $ref: "#/components/schemas/Guidance"
+                        action: "Set LOINC:30525-0='85' for most conservative analysis"
+                  analysis:
+                    $ref: "#/components/schemas/analysis"
         "500":
           description: Internal Server Error
           content:
@@ -705,13 +702,13 @@ paths:
                     example:
                       - timestamp: "2019-09-20T00:00:01Z"
                         event: >-
-                          Guidance plugin results did not pass JSON
+                          analysis plugin results did not pass JSON
                           validator:[{"valuE": "5"}]
-                        source: pdspi-guidance-example
+                        source: pdspi-analysis-example
                         level: 3
                         action: "Correction attempted: 'valuE' to 'value'."
-                  guidance:
-                    $ref: "#/components/schemas/Guidance"
+                  analysis:
+                    $ref: "#/components/schemas/analysis"
 components:
   schemas:
     Message:
@@ -781,7 +778,7 @@ components:
             Maps the piid to a set of selector values. Potentially, a decision tree could be
             implemented here by prefacing each selectorarray item with logic,
             but for this API version we will instead always AND all the selector
-            array elements. For example, 'if guidance is requried for drug _x_
+            array elements. For example, 'if analysis is requried for drug _x_
             AND indication _y_ then use plugin _z_'.
           type: array
           items:
@@ -807,7 +804,7 @@ components:
           items:
             $ref: "#/components/schemas/PluginParameter"
           example:
-            - id: "pdspi-guidance-example:1"
+            - id: "pdspi-analysis-example:1"
               title: Extended interval nomogram
               parameterDescription: >-
                 This calculator uses one of four extended-interval nomograms.
@@ -849,7 +846,7 @@ components:
       type: object
       description: >-
         Used for selecting plugins. For example, a selector that provides the
-        value of a drug class informs what type of guidance plugin is required,
+        value of a drug class informs what type of analysis plugin is required,
         or an URL to a FHIR server informs FHIR server/mapper plugin combination
         to use.
       required:
@@ -863,7 +860,7 @@ components:
             determine which selector type is described. Stylistically, the id will
             end in the community standard coding system used for this type, e.g.,
             FHIR.URI, dosing.rxCUI. But not always, e.g., PDS:sars is a selector 
-            for choosing guidance for treatement vs capacity.
+            for choosing analysis for treatement vs capacity.
           example: FHIR.URI
         legalValues:
           type: object
@@ -920,7 +917,7 @@ components:
             Parameters are completely defined by the plugin and need not be
             interchangable with other plugins. The client will have no prior
             knowledge for plugin parameters.
-          example: "pdspi-guidance-example:1"
+          example: "pdspi-analysis-example:1"
         title:
           type: string
           description: >-
@@ -1027,7 +1024,7 @@ components:
             the client informed on how to render the variableValue. The
             variableValue may also include the 'units' field, which is optional,
             and if left off, implies the system default units. It's up to the
-            guidance plugin to make unit conversions as needed by the guidance
+            analysis plugin to make unit conversions as needed by the analysis
             model, just as it is up to the dashboard to make unit conversions as
             needed by the end user. NOTE: The 'variableValue' is actually an object 
             type, but we use 'string' here to overcome a shortcoming of the swagger 
@@ -1078,9 +1075,9 @@ components:
             The time used to compute the patient variable. For example, this could be the current time if a patient is presenting for treatment, or in a retrospective study, it could be an intervention date, or any date within the retrospective study timeframe.
           format: date-time
           example: "2020-07-01T14:29:15.453Z"
-    Guidance:
+    analysis:
       description: >-
-        Guidance, justification, visualization data and data type, as well as
+        analysis, justification, visualization data and data type, as well as
         cds-hooks compatible formats for direct integration with the EHR.
       type: object
       required:
@@ -1092,24 +1089,24 @@ components:
           description: >-
             A string, uniquely identifies the enabled and installed plugin in
             this deployment, used to identify this plugin in realtime for
-            retriving guidance. Note the dashboard client only needs access to
+            retriving analysis. Note the dashboard client only needs access to
             patient variables required by the installed/enabled plugins, and the
-            guidance plugin data access is restricted even further to only what
-            is neeed for guidance based on the selectors (need-to-know access to
+            analysis plugin data access is restricted even further to only what
+            is neeed for analysis based on the selectors (need-to-know access to
             patient data).
         title:
-          description: An optional title for the guidance plugin
+          description: An optional title for the analysis plugin
           type: string
-          example: Aminoglycoside dosing guidance
+          example: Aminoglycoside dosing analysis
         txid:
           type: string
           description: >-
-            The transaction id sent in the GuidanceInputs. If none were sent, a
+            The transaction id sent in the analysisInputs. If none were sent, a
             unique id will be created and sent back here.
           example: 38-1
         patientId:
           description: >-
-            The ID of the patient for which guidance is required. If not
+            The ID of the patient for which analysis is required. If not
             specified, depend only on the 'variableValue' in 'PatientVariable', which is part of 'inputs'
           type: string
           example: smart-7321938
@@ -1145,7 +1142,7 @@ components:
           example: pdspi-mapper-example
           description: >-
             Uniquely identifies an enabled mapper plugin to use for mapping FHIR
-            resources to variables that are relevant to the guidance plugin. If
+            resources to variables that are relevant to the analysis plugin. If
             not specified, PDS will use the default mapper.
     Output:
       type: object
@@ -1167,7 +1164,7 @@ components:
             type: object
         specs:
           type: array
-          description: Vega-lite spec used for guidance visualization
+          description: Vega-lite spec used for analysis visualization
           items:
             $ref: "#/components/schemas/Spec"
     Card:
@@ -1438,7 +1435,7 @@ components:
             - mD
           description: >-
             A value identifying the plugin type. 
-            'g'=Guidance, 'c'=Convenience, 'm'=Mapper, 'f'=FHIR, 'mD'= Default Mapper, 'fD'=Default FHIR. In 
+            'g'=analysis, 'c'=Convenience, 'm'=Mapper, 'f'=FHIR, 'mD'= Default Mapper, 'fD'=Default FHIR. In 
             the clinical arena, only one FHIR server and only one mapper is 
             allowed, and this can be indicated either with the defaults, or by 
             only installing one mapper and one FHIR plugin type.
@@ -1446,13 +1443,13 @@ components:
         pluginTypeTitle:
           type: string
           enum:
-            - Guidance
+            - analysis
             - Mapper
             - FHIR
             - Default FHIR
             - Default Mapper
           description: >-
-            A human-readable value for the type. 'g'=Guidance, 'c'=Convenience, 
+            A human-readable value for the type. 'g'=analysis, 'c'=Convenience, 
             'm'=Mapper, 'f'=FHIR, 'mD'=Default Mapper, 'fD'=Default FHIR
         settingsDefaults:
           $ref: "#/components/schemas/Settings"

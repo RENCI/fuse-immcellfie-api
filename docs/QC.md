@@ -9,8 +9,7 @@ github repositories using [shields.io](https://shields.io/category/build) to gen
 ## Automated Regression Testing
 
 Each docker-containerized appliance comprizing this framework is added as a submodule to this repo. Each submodule has unit tests installed under `<main>/tests`. 
-The bash script, `<main>/tests/test.sh` can be used to kick-off the tests. Tests are run automatically by dockerhub through `<main>/hooks/test`, which 
-calls `<main>/tests/test.sh`. The `test.sh` shell script sets all the variables found in `<main>/.env` and kicks off the docker container builds using docker-compose. 
+The bash script, `<main>/tests/test.sh` can be used to kick-off the tests. Tests are run automatically by dockerhub through pytest which picks up tests named `def test_<some test` in a file called `<main>/tests/test_<some-file>.py`. The `test.sh` shell script sets all the variables found in `<main>/.env` and kicks off the docker container builds using docker-compose. 
 Subsequently, pytest will look for any files matching the following regular expression: `<main>/tests/test_*.py`. Within those files, pytest will run and report the 
 results of any tests matching the regular expression: `def test_*():`.
 
